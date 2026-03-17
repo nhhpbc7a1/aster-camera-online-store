@@ -1,12 +1,34 @@
--- Product Data Insert Script
+-- Product Data Insert Script (UTF-8 Clean Version)
 -- Generated: 2026-03-16T19:35:59.064Z
 -- Total products: 33
 -- 
 -- Usage:
---   psql -U postgres -d camera_online_store -f data_insert_products.sql
+--   psql -U postgres -d camera_online_store -f data_insert_products_clean_final.sql
+--   OR with explicit encoding:
+--   psql -U postgres -d camera_online_store --set=client_encoding=UTF8 -f data_insert_products_clean_final.sql
+--
+-- Note: This script sets UTF-8 encoding and clears existing data before inserting
 
--- Note: Running without transaction wrapper so individual inserts can succeed/fail independently
--- This prevents "current transaction is aborted" errors
+-- ============================================
+-- STEP 1: Set UTF-8 encoding
+-- ============================================
+SET client_encoding = 'UTF8';
+SET NAMES 'UTF8';
+
+-- ============================================
+-- STEP 2: Clear existing products data
+-- ============================================
+-- Disable foreign key checks temporarily (if any)
+-- TRUNCATE TABLE products CASCADE;
+-- OR use DELETE if you want to keep auto-increment sequence
+DELETE FROM products;
+
+-- Reset sequence to start from 1
+ALTER SEQUENCE products_id_seq RESTART WITH 1;
+
+-- ============================================
+-- STEP 3: Insert Products Data
+-- ============================================
 
 -- 1. Fujifilm X100VI
 INSERT INTO products (
@@ -1228,6 +1250,7 @@ INSERT INTO products (
   true,
   false
 );
+
 
 -- Update sequence for auto-increment ID
 SELECT setval(pg_get_serial_sequence('products', 'id'), (SELECT COALESCE(MAX(id), 1) FROM products));
