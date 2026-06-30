@@ -31,6 +31,9 @@ DB_DATABASE=camera_store
 
 JWT_SECRET=your-secret-key-change-in-production
 JWT_EXPIRATION=7d
+
+# CORS (comma-separated origins, no trailing slash)
+CORS_ORIGINS=http://localhost:5173,http://localhost:3000
 ```
 
 Ghi chú:
@@ -93,4 +96,4 @@ npm run test:cov
 
 ### CORS
 
-Backend đã bật CORS cho một số origin (localhost và domain deploy). Nếu bạn đổi domain frontend, hãy cập nhật danh sách origin trong `src/main.ts`.
+Backend đọc danh sách origin từ biến môi trường `CORS_ORIGINS` (cách nhau bằng dấu phẩy). Nếu không set, dùng origin mặc định trong `src/main.ts`. Khi đổi domain frontend, thêm URL vào `CORS_ORIGINS` trong `.env` rồi restart server.
